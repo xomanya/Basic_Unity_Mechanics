@@ -1,86 +1,43 @@
-using System;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
-{
-    [SerializeField] private Transform _barrel; //источник вылета пулек
-    [SerializeField] private Bullet _bulletPrefab; //префаб пульки
-    [SerializeField] private int _countInClip; //кол-во пулек в обойме
-    [SerializeField] private float _force; //сила, за которую будет вылетать пулька
-    [SerializeField] private float _shootDelay; //задержка между вылетами пулек
-    
-    private Transform _bulletRoot;
-    private Bullet[] _bullets;
-    private bool _canShoot;
-    private float _lastShootTime;
-
-    private void Start()
+    public abstract class Weapon : MonoBehaviour
     {
-        _bulletRoot = new GameObject("BulletRoot").transform;
-        Recharge();
-    }
+        [SerializeField] protected int _level = 1;
+        [SerializeField] protected Transform _barrel;
+        [SerializeField] private WeaponUpgradeData _upgradeData;
+        
+        protected bool CanShoot { get; private set; }
+        protected float Force { get; private set; }
+        protected float LastShootTime { get; set; }
 
-    private void Update()
-    {
-        _canShoot = _shootDelay <= _lastShootTime;
-        if (_canShoot)
-        {
-            return;
-        }
-        _lastShootTime += Time.deltaTime;
-    }
+        private float _shotDelay;
 
-    public void Fire()
-    {
-        if (_canShoot == false)
+        protected virtual void Start()
         {
-            return;
-        }
-        if (TryGetBullet(out Bullet bullet))
-        {
-            bullet.Run(_barrel.forward * _force, _barrel.position);
-            _lastShootTime = 0.0f;
-        }
-    }
-
-    public void Recharge()
-    {
-        _bullets = new Bullet[_countInClip];
-        for (int i = 0; i < _countInClip; i++)
-        {
-            Bullet bullet = Instantiate(_bulletPrefab, _bulletRoot);
-            bullet.Sleep();
-            _bullets[i] = bullet;
-        }
-    }
-
-    private bool TryGetBullet(out Bullet bullet)
-    {
-        int candidate = -1;
-        if (_bullets == null)
-        {
-            bullet = default;
-            return false;
-        }
-
-        for (var i = 0; i < _bullets.Length; i++)
-        {
-            if (_bullets[i] == null)
+            if (_upgradeData.TryGetWeaponData(_level, out WeaponData data))
             {
-                continue;
+                _shotDelay = data.ShotDelay;
+                Force = data.Force;
             }
-            
-            candidate = i;
-            break;
+            else
+            {
+                _shotDelay = _upgradeData.WeaponDataDefault.ShotDelay;
+                Force = _upgradeData.WeaponDataDefault.Force;
+            }
         }
 
-        if (candidate == -1)
+        private void Update()
         {
-            bullet = default;
-            return false;
+            CanShoot = _shotDelay <= LastShootTime;
 
+            if (CanShoot)
+            {
+                return;
+            }
+
+            LastShootTime += Time.deltaTime;
         }
-        bullet = _bullets[candidate];
-        return true;
+
+        public abstract void Fire();
+        public abstract void Recharge();
     }
-}

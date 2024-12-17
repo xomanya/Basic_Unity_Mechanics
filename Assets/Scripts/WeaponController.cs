@@ -1,18 +1,19 @@
 using UnityEngine;
 
-public class WeaponController : MonoBehaviour
-{
-    [SerializeField] private Weapon _weapon;
-    private void Update()
+    public class WeaponController : MonoBehaviour
     {
-        if (Input.GetMouseButton(0))
+        [SerializeField] private Weapon _weapon;
+        
+        private void Update()
         {
-            _weapon.Fire();
-        }
+            if (Input.GetMouseButton(0))
+            {
+                _weapon.Fire();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            _weapon.Recharge();
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                _weapon.Recharge();
+            }
         }
     }
-}
