@@ -12,6 +12,7 @@ public class TransformMovement : MonoBehaviour
         float xDirection = 0;
         float zDirection = 0;
 
+        // Movement forward/backward
         if (Input.GetKey(KeyCode.W))
         {
             zDirection = 1;
@@ -20,15 +21,26 @@ public class TransformMovement : MonoBehaviour
         {
             zDirection = -1;
         }
+        
+        // Movement to sides
         if (Input.GetKey(KeyCode.A))
         {
             xDirection = -1;
-            transform.Rotate(-Vector3.up * rotationSpeed * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
             xDirection = 1;
+        }
+        
+        // Rotation
+        if (Input.GetKey(KeyCode.Q))
+        {
+            transform.Rotate(-Vector3.up * rotationSpeed * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
             transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
         }
         
