@@ -1,4 +1,6 @@
-﻿ using UnityEngine;
+﻿ using System.Collections;
+ using System.Collections.Generic;
+ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -29,7 +31,7 @@ namespace StarterAssets
         public float SpeedChangeRate = 10.0f;
 
         public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
+        public AudioClip FootstepAudioClips;
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
@@ -97,6 +99,10 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        
+        private AudioSource _audioSource;
+        public AudioClip _currentClip;
+        
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -134,6 +140,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            _audioSource = GetComponent<AudioSource>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -262,6 +269,7 @@ namespace StarterAssets
 
                 // rotate to face input direction relative to camera position
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                OnFootStepSound();
             }
 
 
@@ -369,15 +377,12 @@ namespace StarterAssets
                 GroundedRadius);
         }
 
-        private void OnFootstep(AnimationEvent animationEvent)
+        private void OnFootStepSound()
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            if (_currentClip != null)
             {
-                if (FootstepAudioClips.Length > 0)
-                {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-                }
+                _audioSource.clip = _currentClip;
+                _audioSource.Play();
             }
         }
 

@@ -1,16 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-    public sealed class Gun : Weapon
+[RequireComponent(typeof(AudioSource))]    
+public sealed class Gun : Weapon
     {
         [SerializeField] private int _countInClip;
         [SerializeField] private Bullet _bulletPrefab;
         
         private Transform _bulletRoot;
         private Queue<Bullet> _bullets;
+        
+        private AudioSource _audioSource;
+        public AudioClip _shootClip;
 
         protected override void Start()
         {
+            _audioSource = GetComponent<AudioSource>();
+            
             base.Start();
             _bullets = new Queue<Bullet>(_countInClip);
             _bulletRoot = new GameObject("BulletRoot").transform;
@@ -26,6 +32,7 @@ using UnityEngine;
             
             if (_bullets.TryDequeue(out Bullet bullet))
             {
+                _audioSource.PlayOneShot(_shootClip);
                 bullet.Run(_barrel.forward * Force, _barrel.position);
                 LastShootTime = 0.0f;
             }

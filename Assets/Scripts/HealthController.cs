@@ -6,6 +6,10 @@ using UnityEngine;
         [SerializeField] private int _health;
         [SerializeField] private int _lifeTime;
 
+        private AudioSource _audioSource;
+        [SerializeField] private AudioClip _damageClip;
+        [SerializeField] private AudioClip _deathClip;
+        
         private bool _isAlive = true;
         private int _maxHp;
 
@@ -19,6 +23,7 @@ using UnityEngine;
 
         private void Start()
         {
+            _audioSource = GetComponent<AudioSource>();
             _maxHp = _health;
         }
 
@@ -29,9 +34,12 @@ using UnityEngine;
                 return false;
             }
 
+            _audioSource.PlayOneShot(_damageClip);
+            
             _health -= damage;
             if (_health <= 0)
             {
+                _audioSource.PlayOneShot(_deathClip);
                 StartCoroutine(Die());
                 _isAlive = false;
                 return false;
