@@ -35,10 +35,8 @@ using UnityEngine;
                     {
                         return;
                     }
-                    if (healthController.TryGetComponent(out Rigidbody rigidbody) == false)
-                    {
-                        rigidbody = healthController.AddComponent<Rigidbody>();
-                    }
+                    
+                    Rigidbody rigidbody = other.collider.gameObject.GetOrAddRigidbody();
                     rigidbody.AddExplosionForce(_powerExplosion, center, radius);
                 }
             }

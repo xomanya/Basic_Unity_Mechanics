@@ -40,4 +40,9 @@ using UnityEngine;
 
         public abstract void Fire();
         public abstract void Recharge();
+
+        public void SetActive(bool isActive)
+        {
+            gameObject.SetActive(isActive);
+        }
     }

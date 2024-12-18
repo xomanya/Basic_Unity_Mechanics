@@ -39,10 +39,7 @@ using UnityEngine;
                     return;
                 }
 
-                if (other.collider.TryGetComponent(out Rigidbody rigidbody) == false)
-                {
-                    rigidbody = other.collider.AddComponent<Rigidbody>();
-                }
+                Rigidbody rigidbody = RigidbodyHelper.GetOrAddRigidbody(other.collider.gameObject);
                 rigidbody.AddForce(_rigidbody.velocity * _force, ForceMode.Impulse);
             }
         }

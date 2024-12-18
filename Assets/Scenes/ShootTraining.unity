@@ -1132,7 +1132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121311dbda2cce64ca60bab6c19a6719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weapon: {fileID: 728246122}
 --- !u!1001 &1402827283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1592,7 +1591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _level: 1
   _barrel: {fileID: 1514644911}
-  _upgradeData: {fileID: 0}
+  _upgradeData: {fileID: 11400000, guid: 58ce491525ead0b46a7faddcb5cf599a, type: 2}
   _rocketPrefab: {fileID: 6698632901375804029, guid: 4564568480c1af5429afa94557d206f9,
     type: 3}
 --- !u!1001 &733025566330615828
