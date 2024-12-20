@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]    
 public sealed class Gun : Weapon
@@ -12,6 +14,9 @@ public sealed class Gun : Weapon
         
         private AudioSource _audioSource;
         public AudioClip _shootClip;
+        // UI
+        public Text patronText;
+        private int _patronCount;
 
         protected override void Start()
         {
@@ -21,6 +26,8 @@ public sealed class Gun : Weapon
             _bullets = new Queue<Bullet>(_countInClip);
             _bulletRoot = new GameObject("BulletRoot").transform;
             Recharge();
+            _patronCount = _countInClip;
+            PatronCount();
         }
 
         public override void Fire()
@@ -35,6 +42,10 @@ public sealed class Gun : Weapon
                 _audioSource.PlayOneShot(_shootClip);
                 bullet.Run(_barrel.forward * Force, _barrel.position);
                 LastShootTime = 0.0f;
+                _patronCount -= 1;
+                //Debug.Log(_patronCount);
+                PatronCount();
+
             }
         }
 
@@ -46,6 +57,11 @@ public sealed class Gun : Weapon
                 bullet.Sleep();
                 _bullets.Enqueue(bullet);
             }
+        }
+
+        private void PatronCount()
+        {
+            patronText.text = _patronCount.ToString() + " / " + _countInClip.ToString();
         }
 
         // private bool TryGetBullet(out Bullet bullet)

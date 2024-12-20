@@ -10,6 +10,7 @@ public sealed class WeaponSelector
     public WeaponSelector(Weapon[] weapons)
     {
         _weapons = weapons;
+        SelectWeapon();
     }
 
     public void Fire()

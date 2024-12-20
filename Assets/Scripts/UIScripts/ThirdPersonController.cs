@@ -1,6 +1,9 @@
-﻿ using System.Collections;
+﻿ using System;
+ using System.Collections;
  using System.Collections.Generic;
  using UnityEngine;
+ using UnityEngine.SceneManagement;
+ 
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -103,6 +106,13 @@ namespace StarterAssets
         private AudioSource _audioSource;
         public AudioClip _currentClip;
         
+        // Damage
+        public int maxHealth = 100;
+        public int currentHealth;
+        
+        public HealthBarController healthBar;
+        
+        
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -127,7 +137,11 @@ namespace StarterAssets
 #endif
             }
         }
-
+        
+        // public void OpenSettings()
+        // {
+        //     SceneManager.LoadScene("Menu");
+        // }
 
         private void Awake()
         {
@@ -146,6 +160,10 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
+            
+            currentHealth = maxHealth;
+            healthBar.SetMaxHealth(maxHealth);
+            
 #if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -166,6 +184,32 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                TakeDamage(10);
+            }
+        }
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                TakeDamage(10);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Heal"))
+            {
+                TakeDamage(-10);
+                Destroy(other.gameObject);
+            }
+        }
+
+        void TakeDamage(int damage)
+        {
+            currentHealth -= damage;
+            healthBar.SetHealth(currentHealth);
         }
 
         private void LateUpdate()
