@@ -5,13 +5,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MenuScript : MonoBehaviour
 {
-    // private void Start()
-    // {
-    //     SceneManager.UnloadScene()
-    // }
-
     public void CloseSettings()
     {
         SceneManager.LoadScene(0);
+    }
+    
+    public void WinMenu()
+    {
+        SceneManager.LoadScene(2);
     }
 }
